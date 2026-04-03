@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Happy Birthday!</title>
   <!-- Google Fonts for Handwriting -->
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Dancing+Script:wght@600&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --bg: #0d0e12;
@@ -17,7 +20,7 @@
       --flame-inner: #ffcc00;
       --glow: rgba(255, 180, 80, 0.35);
     }
-    
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -57,7 +60,7 @@
       cursor: pointer;
       z-index: 10;
       transition: transform 0.3s ease, filter 0.3s ease;
-      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.6));
     }
 
     .cake:active {
@@ -65,7 +68,8 @@
     }
 
     /* Layers */
-    .layer-bottom, .layer-top {
+    .layer-bottom,
+    .layer-top {
       position: absolute;
       width: 100%;
       border-radius: 12px;
@@ -75,13 +79,13 @@
     .layer-bottom {
       height: 80px;
       bottom: 0;
-      box-shadow: inset 0 -15px 25px rgba(0,0,0,0.3);
+      box-shadow: inset 0 -15px 25px rgba(0, 0, 0, 0.3);
     }
 
     .layer-top {
       height: 80px;
       bottom: 80px;
-      box-shadow: inset 0 -15px 25px rgba(0,0,0,0.25);
+      box-shadow: inset 0 -15px 25px rgba(0, 0, 0, 0.25);
     }
 
     /* Icing Drips */
@@ -92,39 +96,57 @@
       top: -10px;
       background: var(--icing);
       border-radius: 20px;
-      box-shadow: inset 0 5px 10px rgba(255,255,255,0.8), 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.8), 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    
+
     .drip {
       position: absolute;
       width: 34px;
       background: var(--icing);
       border-radius: 0 0 20px 20px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
     }
-    .drip:nth-child(1) { height: 45px; left: 15px; }
-    .drip:nth-child(2) { height: 60px; left: 60px; }
-    .drip:nth-child(3) { height: 35px; left: 110px; }
-    .drip:nth-child(4) { height: 75px; left: 150px; }
-    .drip:nth-child(5) { height: 40px; left: 205px; }
+
+    .drip:nth-child(1) {
+      height: 45px;
+      left: 15px;
+    }
+
+    .drip:nth-child(2) {
+      height: 60px;
+      left: 60px;
+    }
+
+    .drip:nth-child(3) {
+      height: 35px;
+      left: 110px;
+    }
+
+    .drip:nth-child(4) {
+      height: 75px;
+      left: 150px;
+    }
+
+    .drip:nth-child(5) {
+      height: 40px;
+      left: 205px;
+    }
 
     /* Candle */
     .candle {
       position: absolute;
       width: 18px;
       height: 70px;
-      background: repeating-linear-gradient(
-        -45deg,
-        #fff,
-        #fff 10px,
-        #ff6b6b 10px,
-        #ff6b6b 20px
-      );
+      background: repeating-linear-gradient(-45deg,
+          #fff,
+          #fff 10px,
+          #ff6b6b 10px,
+          #ff6b6b 20px);
       bottom: 160px;
       left: 50%;
       transform: translateX(-50%);
       border-radius: 4px;
-      box-shadow: inset -2px 0 5px rgba(0,0,0,0.2), 2px 5px 8px rgba(0,0,0,0.4);
+      box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.2), 2px 5px 8px rgba(0, 0, 0, 0.4);
     }
 
     /* Wick */
@@ -162,8 +184,16 @@
     }
 
     @keyframes flicker {
-      0% { transform: translateX(-50%) translateY(0) scale(1) rotate(-3deg); opacity: 0.9; }
-      100% { transform: translateX(-50%) translateY(-2px) scale(1.05) rotate(3deg); opacity: 1; filter: drop-shadow(0 0 15px #ffcc00); }
+      0% {
+        transform: translateX(-50%) translateY(0) scale(1) rotate(-3deg);
+        opacity: 0.9;
+      }
+
+      100% {
+        transform: translateX(-50%) translateY(-2px) scale(1.05) rotate(3deg);
+        opacity: 1;
+        filter: drop-shadow(0 0 15px #ffcc00);
+      }
     }
 
     .glow {
@@ -181,14 +211,21 @@
       mix-blend-mode: screen;
     }
 
-    .lit ~ .glow {
+    .lit~.glow {
       opacity: 1;
       animation: pulse-glow 2s infinite alternate;
     }
 
     @keyframes pulse-glow {
-      0% { transform: translateX(-50%) scale(1); opacity: 0.7; }
-      100% { transform: translateX(-50%) scale(1.15); opacity: 1; }
+      0% {
+        transform: translateX(-50%) scale(1);
+        opacity: 0.7;
+      }
+
+      100% {
+        transform: translateX(-50%) scale(1.15);
+        opacity: 1;
+      }
     }
 
     /* Text */
@@ -196,23 +233,26 @@
       position: absolute;
       bottom: 10px;
       font-size: 30px;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       text-align: center;
       pointer-events: none;
       transition: opacity 0.5s ease;
       letter-spacing: 1px;
-      text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
     }
-    
-    .lit ~ .instruction {
+
+    .lit~.instruction {
       opacity: 0;
     }
 
     /* 3D Pop-up Birthday Card */
     .card-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(10px);
       display: flex;
       justify-content: center;
@@ -239,7 +279,7 @@
       transform: translateY(60px) scale(0.8) rotateX(15deg);
       transition: transform 1.2s cubic-bezier(0.2, 0.9, 0.3, 1.1) 0.1s;
     }
-    
+
     .card-overlay.show .card-3d {
       transform: translateY(0) scale(1) rotateX(0deg);
     }
@@ -255,7 +295,8 @@
     .card-top {
       top: 0;
       transform-origin: bottom center;
-      transform: rotateX(-170deg); /* Folded over bottom half */
+      transform: rotateX(-170deg);
+      /* Folded over bottom half */
       transition: transform 1.2s cubic-bezier(0.3, 0.8, 0.3, 1) 0.2s;
       z-index: 2;
     }
@@ -263,18 +304,23 @@
     .card-bottom {
       bottom: 0px;
       transform-origin: top center;
-      transform: rotateX(10deg); /* Stationary base */
+      transform: rotateX(10deg);
+      /* Stationary base */
       transition: transform 1.2s cubic-bezier(0.3, 0.8, 0.3, 1) 0.2s;
       z-index: 1;
     }
 
     .card-overlay.show .card-top {
-      transform: rotateX(-10deg); /* Open slightly back */
+      transform: rotateX(-10deg);
+      /* Open slightly back */
     }
 
     .face {
       position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       backface-visibility: hidden;
       display: flex;
       flex-direction: column;
@@ -283,8 +329,8 @@
       box-sizing: border-box;
       padding: 30px 20px;
       background: radial-gradient(ellipse at center, #1c3d42 0%, #152d31 100%);
-      border: 3px solid rgba(255,255,255,0.1);
-      box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
     }
 
     .card-top .inside {
@@ -292,13 +338,14 @@
       justify-content: flex-end;
       border-radius: 16px 16px 0 0;
     }
-    
+
     .card-top .outside {
       transform: rotateX(180deg);
       border-radius: 16px 16px 0 0;
       background: radial-gradient(ellipse at center, #244b52 0%, #173439 100%);
       align-items: center;
-      justify-content: flex-end; /* since it folds 180, flex-end points toward physical center */
+      justify-content: flex-end;
+      /* since it folds 180, flex-end points toward physical center */
       padding-bottom: 50px;
     }
 
@@ -313,16 +360,17 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 440px; 
+      width: 440px;
       height: 440px;
-      margin-top: -220px; margin-left: -220px;
+      margin-top: -220px;
+      margin-left: -220px;
       background-image: url('flower.png');
       background-size: cover;
       background-position: center;
       -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 63%);
       mask-image: radial-gradient(circle at center, black 40%, transparent 63%);
       transform-origin: center;
-      
+
       transform: rotateX(-80deg) scale(0);
       transition: transform 1.2s cubic-bezier(0.3, 0.8, 0.3, 1) 0.4s;
       z-index: 10;
@@ -330,7 +378,8 @@
     }
 
     .card-overlay.show .flower-pop {
-      transform: rotateX(-5deg) scale(1.15); /* Stands straight up in the crease */
+      transform: rotateX(-5deg) scale(1.15);
+      /* Stands straight up in the crease */
     }
 
     .gold-text {
@@ -340,7 +389,7 @@
       -webkit-text-fill-color: transparent;
       color: #cca044;
       text-align: center;
-      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6));
+      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
     }
 
     .text-top {
@@ -359,24 +408,28 @@
     }
 
     .outside-text {
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       font-size: 26px;
       font-family: sans-serif;
-      transform: rotateZ(180deg); /* correct upside down due to rotateX */
+      transform: rotateZ(180deg);
+      /* correct upside down due to rotateX */
       letter-spacing: 3px;
       text-transform: uppercase;
       opacity: 0.8;
     }
 
-    .sinhala-text {
-      font-family: sans-serif;
-      font-size: 16px;
-      color: #a4c1c5;
+    .wish-text {
+      font-family: 'Caveat', cursive;
+      font-size: 28px;
+      font-weight: 500;
+      color: #cca044;
+      line-height: 1.2;
       border-top: 1px dashed rgba(212, 165, 72, 0.4);
       padding-top: 15px;
       margin-top: 20px;
-      width: 80%;
+      width: 85%;
       text-align: center;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     }
 
     .close-btn {
@@ -387,35 +440,58 @@
       background: none;
       border: none;
       cursor: pointer;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255, 255, 255, 0.5);
       font-family: sans-serif;
       transition: color 0.2s, transform 0.2s;
       z-index: 200;
-      text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
     }
-    .close-btn:hover { color: #fff; transform: scale(1.1); }
+
+    .close-btn:hover {
+      color: #fff;
+      transform: scale(1.1);
+    }
 
     @media (max-width: 500px) {
-      .cake { transform: scale(0.85); }
-      .text-top { font-size: 32px; }
-      .text-bottom { font-size: 48px; }
-      .card-3d { height: 480px; max-width: 340px; }
-      .flower-pop { width: 340px; height: 340px; margin-top: -170px; margin-left: -170px; }
+      .cake {
+        transform: scale(0.85);
+      }
+
+      .text-top {
+        font-size: 32px;
+      }
+
+      .text-bottom {
+        font-size: 48px;
+      }
+
+      .card-3d {
+        height: 480px;
+        max-width: 340px;
+      }
+
+      .flower-pop {
+        width: 340px;
+        height: 340px;
+        margin-top: -170px;
+        margin-left: -170px;
+      }
     }
   </style>
-  
+
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
+
 <body>
 
   <div class="scene">
     <div class="glow"></div>
     <div class="flame" id="flame"></div>
-    
+
     <div class="cake" id="cake" role="button" tabindex="0">
       <div class="candle"></div>
-      
+
       <div class="layer-top">
         <div class="icing">
           <div class="drip"></div>
@@ -425,7 +501,7 @@
           <div class="drip"></div>
         </div>
       </div>
-      
+
       <div class="layer-bottom">
         <div class="icing" style="top: -10px;">
           <div class="drip" style="height: 50px; left: 20px;"></div>
@@ -435,14 +511,14 @@
         </div>
       </div>
     </div>
-    
+
     <div class="instruction">Tap the cake to light the candle!</div>
   </div>
 
   <div class="card-overlay" id="cardOverlay">
     <button class="close-btn" id="closeBtn">&times;</button>
     <div class="card-3d">
-      
+
       <!-- Top Half (Folds Down Over Bottom) -->
       <div class="card-flap card-top">
         <div class="face inside">
@@ -457,8 +533,9 @@
       <div class="card-flap card-bottom">
         <div class="face inside">
           <h1 class="gold-text text-bottom">Birthday</h1>
-          <div class="sinhala-text">
-            [සිංහල පණිවිඩය මෙහි ඇතුලත් කරන්න]
+          <div class="wish-text">
+            May your day be filled with<br>
+            happiness, health, and love!
           </div>
         </div>
       </div>
@@ -479,54 +556,54 @@
     // WebAudio API for Synthesizer Music
     let audioCtx;
     function playBirthdaySong() {
-      if(!audioCtx) {
+      if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-      if(audioCtx.state === 'suspended') audioCtx.resume();
-      
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
       const now = audioCtx.currentTime;
       const gain = audioCtx.createGain();
       gain.connect(audioCtx.destination);
       gain.gain.setValueAtTime(0, now);
       gain.gain.linearRampToValueAtTime(0.3, now + 0.1);
-      
+
       // Happy birthday melody notes & duration (Speed adjusted)
       const notes = [
-        {f: 261.63, d: 0.4}, {f: 261.63, d: 0.4}, {f: 293.66, d: 0.8}, {f: 261.63, d: 0.8}, {f: 349.23, d: 0.8}, {f: 329.63, d: 1.6},
-        {f: 261.63, d: 0.4}, {f: 261.63, d: 0.4}, {f: 293.66, d: 0.8}, {f: 261.63, d: 0.8}, {f: 392.00, d: 0.8}, {f: 349.23, d: 1.6},
-        {f: 261.63, d: 0.4}, {f: 261.63, d: 0.4}, {f: 523.25, d: 0.8}, {f: 440.00, d: 0.8}, {f: 349.23, d: 0.8}, {f: 329.63, d: 0.8}, {f: 293.66, d: 1.2},
-        {f: 466.16, d: 0.4}, {f: 466.16, d: 0.4}, {f: 440.00, d: 0.8}, {f: 349.23, d: 0.8}, {f: 392.00, d: 0.8}, {f: 349.23, d: 1.6}
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 293.66, d: 0.8 }, { f: 261.63, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 329.63, d: 1.6 },
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 293.66, d: 0.8 }, { f: 261.63, d: 0.8 }, { f: 392.00, d: 0.8 }, { f: 349.23, d: 1.6 },
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 523.25, d: 0.8 }, { f: 440.00, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 329.63, d: 0.8 }, { f: 293.66, d: 1.2 },
+        { f: 466.16, d: 0.4 }, { f: 466.16, d: 0.4 }, { f: 440.00, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 392.00, d: 0.8 }, { f: 349.23, d: 1.6 }
       ];
-      
+
       let tOffset = 0;
       const speed = 0.85; // Slightly slower, majestic pace
-      
+
       notes.forEach((note) => {
         const osc = audioCtx.createOscillator();
         const noteGain = audioCtx.createGain();
         osc.type = 'triangle';
         osc.frequency.value = note.f;
-        
+
         osc.connect(noteGain);
         noteGain.connect(gain);
-        
+
         const startTime = now + tOffset;
         const duration = note.d * speed;
-        
+
         noteGain.gain.setValueAtTime(0, startTime);
         noteGain.gain.linearRampToValueAtTime(1, startTime + 0.05);
         noteGain.gain.setValueAtTime(1, startTime + duration - 0.05);
         noteGain.gain.linearRampToValueAtTime(0, startTime + duration);
-        
+
         osc.start(startTime);
         osc.stop(startTime + duration);
-        
+
         tOffset += duration;
       });
-      
+
       // Stop master gain when done
       gain.gain.linearRampToValueAtTime(0, now + tOffset + 0.5);
-      
+
       return tOffset; // Return total song duration
     }
 
@@ -541,14 +618,14 @@
           angle: 60,
           spread: 90,
           origin: { x: 0, y: 0.7 },
-          colors: ['#ff7675','#ffeaa7','#55efc4','#74b9ff']
+          colors: ['#ff7675', '#ffeaa7', '#55efc4', '#74b9ff']
         });
         confetti({
           particleCount: 15,
           angle: 120,
           spread: 90,
           origin: { x: 1, y: 0.7 },
-          colors: ['#ff7675','#ffeaa7','#55efc4','#74b9ff']
+          colors: ['#ff7675', '#ffeaa7', '#55efc4', '#74b9ff']
         });
 
         if (Date.now() < end) {
@@ -558,27 +635,27 @@
     }
 
     cake.addEventListener('click', async () => {
-      if(isLit) return;
+      if (isLit) return;
       isLit = true;
-      
+
       // Ignite CSS Flame & Glow
       cake.classList.add('lit');
       document.querySelector('.scene').classList.add('lit');
-      
+
       try {
-        if(typeof fireConfetti === 'function' && typeof confetti !== 'undefined') {
+        if (typeof fireConfetti === 'function' && typeof confetti !== 'undefined') {
           fireConfetti();
         }
       } catch (e) {
         console.log("Confetti bypassed:", e);
       }
-      
+
       try {
         playBirthdaySong();
       } catch (e) {
         console.log("Audio bypassed:", e);
       }
-      
+
       // Show elegant card after 0.5 seconds allowing them to enjoy the cake and music
       setTimeout(() => {
         cardOverlay.classList.add('show');
@@ -591,4 +668,5 @@
 
   </script>
 </body>
+
 </html>
