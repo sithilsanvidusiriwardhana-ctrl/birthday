@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Happy Birthday</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="stage" role="main">
+      <section class="panel" aria-labelledby="greet">
+        <h2 id="greet" class="greeting">Happy Birthday, Friend! <span aria-hidden>🎉</span></h2>
+        <p class="sub" id="subtext">
+          <!-- Sinhala placeholder: replace inner text with Sinhala version if desired -->
+          I'm so glad you're in my life — let's celebrate! <!-- [SINHALA_PLACEHOLDER_1] -->
+        </p>
+
+        <div class="cake-wrap">
+          <div class="cake" id="cake" role="button" aria-pressed="false" tabindex="0" title="Click to light the candle">
+            <span class="cake-emoji" aria-hidden>🎂</span>
+            <span class="candle" id="candle" aria-hidden>🕯️</span>
+          </div>
+
+          <div>
+            <div class="meta">Tap the cake to light the candle and reveal a surprise.</div>
+            <div style="height:6px"></div>
+            <div class="meta" style="font-size:12px">Mobile friendly — works on tap.</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel-side" aria-hidden="false">
+        <div class="balloons">🎈🎈🎈</div>
+        <div class="note">
+          Click the cake to play music, confetti, and open a card. <!-- [SINHALA_PLACEHOLDER_2] -->
+        </div>
+      </aside>
+    </main>
+
+    <!-- Birthday card popup -->
+    <div class="card" id="birthdayCard" role="dialog" aria-modal="true" aria-label="Birthday card">
+      <h3 class="card-title" id="cardTitle">Happy Birthday! 🎈</h3>
+      <p class="card-body" id="cardMessage">
+        I'm so glad to have a friend like you. May your year be filled with success and happiness!
+        <!-- Sinhala placeholder: replace this paragraph with Sinhala if you want. [SINHALA_PLACEHOLDER_3] -->
+      </p>
+      <div class="card-cta">
+        <button class="btn" id="closeCard">Close</button>
+        <button class="btn primary" id="shareBtn">Share ❤️</button>
+      </div>
+    </div>
+
+    <!-- Hidden audio element (replace src in README) -->
+    <audio id="bgAudio" preload="auto" style="display:none">
+      <source src="celebration.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+  </body>
+</html>
