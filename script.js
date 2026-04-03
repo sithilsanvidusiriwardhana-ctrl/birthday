@@ -133,8 +133,16 @@ function playAudioOnInteraction(){
   playGeneratedMusic();
 }
 
-function showCard(){ card.classList.add('show'); }
-function hideCard(){ card.classList.remove('show'); }
+function showCard(){ 
+  card.classList.add('show');
+  const stage = document.querySelector('.stage');
+  if(stage) stage.style.display = 'none';
+}
+function hideCard(){ 
+  card.classList.remove('show');
+  const stage = document.querySelector('.stage');
+  if(stage) stage.style.display = '';
+}
 
 shareBtn.addEventListener('click', ()=>{
   const text = "Happy Birthday! 🎈 I'm so glad to have a friend like you.";
@@ -149,13 +157,15 @@ closeCardBtn.addEventListener('click', hideCard);
 async function lightCandle(){
   if(isLit) return;
   isLit = true;
+  document.body.classList.add('focus-cake'); // display only cake
+
   cake.setAttribute('aria-pressed','true');
   cake.classList.add('lit');
   candle.innerHTML = '<span class="flame">🔥</span>';
   candle.setAttribute('aria-hidden','false');
   playAudioOnInteraction();
   startConfetti();
-  setTimeout(showCard, 2000);
+  setTimeout(showCard, 8500); // Wait for the 8s song to finish before showing the card
 }
 
 // accessibility

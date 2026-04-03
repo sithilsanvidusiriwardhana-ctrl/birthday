@@ -1,60 +1,465 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Happy Birthday</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <main class="stage" role="main">
-      <section class="panel" aria-labelledby="greet">
-        <h2 id="greet" class="greeting">Happy Birthday, Friend! <span aria-hidden>🎉</span></h2>
-        <p class="sub" id="subtext">
-          <!-- Sinhala placeholder: replace inner text with Sinhala version if desired -->
-          I'm so glad you're in my life — let's celebrate! <!-- [SINHALA_PLACEHOLDER_1] -->
-        </p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+  <!-- Google Fonts for Handwriting -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0e12;
+      --cake-light: #f5e1da;
+      --cake-dark: #eebfb3;
+      --icing: #ffeff3;
+      --candle: #ffe3e1;
+      --flame-outer: #ff9900;
+      --flame-inner: #ffcc00;
+      --glow: rgba(255, 180, 80, 0.35);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        <div class="cake-wrap">
-          <div class="cake" id="cake" role="button" aria-pressed="false" tabindex="0" title="Click to light the candle">
-            <span class="cake-emoji" aria-hidden>🎂</span>
-            <span class="candle" id="candle" aria-hidden>🕯️</span>
-          </div>
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(circle at center, #1f222b 0%, #0d0e12 100%);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Caveat', cursive;
+      overflow: hidden;
+      color: #fff;
+    }
 
-          <div>
-            <div class="meta">Tap the cake to light the candle and reveal a surprise.</div>
-            <div style="height:6px"></div>
-            <div class="meta" style="font-size:12px">Mobile friendly — works on tap.</div>
-          </div>
+    /* Container */
+    .scene {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 50px;
+    }
+
+    /* The Cake */
+    .cake {
+      position: relative;
+      width: 260px;
+      height: 160px;
+      cursor: pointer;
+      z-index: 10;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));
+    }
+
+    .cake:active {
+      transform: scale(0.97);
+    }
+
+    /* Layers */
+    .layer-bottom, .layer-top {
+      position: absolute;
+      width: 100%;
+      border-radius: 12px;
+      background: linear-gradient(to right, #cf9286 0%, #efcbc2 50%, #d89b8e 100%);
+    }
+
+    .layer-bottom {
+      height: 80px;
+      bottom: 0;
+      box-shadow: inset 0 -15px 25px rgba(0,0,0,0.3);
+    }
+
+    .layer-top {
+      height: 80px;
+      bottom: 80px;
+      box-shadow: inset 0 -15px 25px rgba(0,0,0,0.25);
+    }
+
+    /* Icing Drips */
+    .icing {
+      position: absolute;
+      width: 100%;
+      height: 25px;
+      top: -10px;
+      background: var(--icing);
+      border-radius: 20px;
+      box-shadow: inset 0 5px 10px rgba(255,255,255,0.8), 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .drip {
+      position: absolute;
+      width: 34px;
+      background: var(--icing);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    }
+    .drip:nth-child(1) { height: 45px; left: 15px; }
+    .drip:nth-child(2) { height: 60px; left: 60px; }
+    .drip:nth-child(3) { height: 35px; left: 110px; }
+    .drip:nth-child(4) { height: 75px; left: 150px; }
+    .drip:nth-child(5) { height: 40px; left: 205px; }
+
+    /* Candle */
+    .candle {
+      position: absolute;
+      width: 18px;
+      height: 70px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #fff,
+        #fff 10px,
+        #ff6b6b 10px,
+        #ff6b6b 20px
+      );
+      bottom: 160px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+      box-shadow: inset -2px 0 5px rgba(0,0,0,0.2), 2px 5px 8px rgba(0,0,0,0.4);
+    }
+
+    /* Wick */
+    .candle::after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 14px;
+      background: #222;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    /* Flame */
+    .flame {
+      position: absolute;
+      bottom: 240px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 22px;
+      height: 40px;
+      background: radial-gradient(ellipse at bottom, var(--flame-inner) 0%, var(--flame-outer) 100%);
+      border-radius: 50% 50% 20% 20%;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 15;
+      filter: drop-shadow(0 0 10px #ff9900);
+    }
+
+    .lit .flame {
+      opacity: 1;
+      animation: flicker 0.12s infinite alternate;
+    }
+
+    @keyframes flicker {
+      0% { transform: translateX(-50%) translateY(0) scale(1) rotate(-3deg); opacity: 0.9; }
+      100% { transform: translateX(-50%) translateY(-2px) scale(1.05) rotate(3deg); opacity: 1; filter: drop-shadow(0 0 15px #ffcc00); }
+    }
+
+    .glow {
+      position: absolute;
+      bottom: 130px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 65%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      z-index: 1;
+      mix-blend-mode: screen;
+    }
+
+    .lit ~ .glow {
+      opacity: 1;
+      animation: pulse-glow 2s infinite alternate;
+    }
+
+    @keyframes pulse-glow {
+      0% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+      100% { transform: translateX(-50%) scale(1.15); opacity: 1; }
+    }
+
+    /* Text */
+    .instruction {
+      position: absolute;
+      bottom: 10px;
+      font-size: 30px;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      letter-spacing: 1px;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    }
+    
+    .lit ~ .instruction {
+      opacity: 0;
+    }
+
+    /* Card */
+    .card-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+      z-index: 100;
+    }
+
+    .card-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .card {
+      background: #faf8f5;
+      color: #2c2c2c;
+      padding: 50px 40px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 540px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      transform: translateY(60px) scale(0.9);
+      transition: transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      position: relative;
+      border: 8px solid #fff;
+      background-image: linear-gradient(180deg, #fff 0%, #f6f3eb 100%);
+    }
+
+    .card-overlay.show .card {
+      transform: translateY(0) scale(1);
+    }
+
+    .card h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 64px;
+      color: #e55a5a;
+      margin-bottom: 25px;
+      line-height: 1.1;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .card p {
+      font-size: 34px;
+      line-height: 1.3;
+      margin-bottom: 25px;
+      color: #3d3d3d;
+    }
+
+    .sinhala-text {
+      font-family: sans-serif; /* Fallback for Sinhala rendering */
+      font-size: 22px;
+      color: #7a7a7a;
+      border-top: 1px dashed #d6d6d6;
+      padding-top: 25px;
+      margin-top: 25px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #bfaea2;
+      font-family: sans-serif;
+      transition: color 0.2s;
+    }
+    .close-btn:hover { color: #555; }
+    
+    @media (max-width: 500px) {
+      .cake { transform: scale(0.85); }
+      .card h1 { font-size: 52px; }
+      .card p { font-size: 28px; }
+    }
+  </style>
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <div class="scene">
+    <div class="glow"></div>
+    <div class="flame" id="flame"></div>
+    
+    <div class="cake" id="cake" role="button" tabindex="0">
+      <div class="candle"></div>
+      
+      <div class="layer-top">
+        <div class="icing">
+          <div class="drip"></div>
+          <div class="drip"></div>
+          <div class="drip"></div>
+          <div class="drip"></div>
+          <div class="drip"></div>
         </div>
-      </section>
-
-      <aside class="panel-side" aria-hidden="false">
-        <div class="balloons">🎈🎈🎈</div>
-        <div class="note">
-          Click the cake to play music, confetti, and open a card. <!-- [SINHALA_PLACEHOLDER_2] -->
+      </div>
+      
+      <div class="layer-bottom">
+        <div class="icing" style="top: -10px;">
+          <div class="drip" style="height: 50px; left: 20px;"></div>
+          <div class="drip" style="height: 35px; left: 85px;"></div>
+          <div class="drip" style="height: 65px; left: 140px;"></div>
+          <div class="drip" style="height: 40px; left: 200px;"></div>
         </div>
-      </aside>
-    </main>
-
-    <!-- Birthday card popup -->
-    <div class="card" id="birthdayCard" role="dialog" aria-modal="true" aria-label="Birthday card">
-      <h3 class="card-title" id="cardTitle">Happy Birthday! 🎈</h3>
-      <p class="card-body" id="cardMessage">
-        I'm so glad to have a friend like you. May your year be filled with success and happiness!
-        <!-- Sinhala placeholder: replace this paragraph with Sinhala if you want. [SINHALA_PLACEHOLDER_3] -->
-      </p>
-      <div class="card-cta">
-        <button class="btn" id="closeCard">Close</button>
-        <button class="btn primary" id="shareBtn">Share ❤️</button>
       </div>
     </div>
+    
+    <div class="instruction">Tap the cake to light the candle!</div>
+  </div>
 
-    <!-- Hidden audio element (replace src in README) -->
-    <audio id="bgAudio" preload="auto" style="display:none">
-      <source src="celebration.mp3" type="audio/mpeg">
-    </audio>
+  <div class="card-overlay" id="cardOverlay">
+    <div class="card">
+      <button class="close-btn" id="closeBtn">&times;</button>
+      <h1>Happy Birthday!</h1>
+      <p>Wishing you a wonderful day filled with happiness and a beautiful year ahead.</p>
+      <div class="sinhala-text">
+        [සිංහල පණිවිඩය මෙහි ඇතුලත් කරන්න]
+      </div>
+    </div>
+  </div>
 
-    <script src="script.js"></script>
-  </body>
+  <script>
+    const cake = document.getElementById('cake');
+    const flame = document.getElementById('flame');
+    const cardOverlay = document.getElementById('cardOverlay');
+    const closeBtn = document.getElementById('closeBtn');
+    let isLit = false;
+
+    // WebAudio API for Synthesizer Music
+    let audioCtx;
+    function playBirthdaySong() {
+      if(!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+      
+      const now = audioCtx.currentTime;
+      const gain = audioCtx.createGain();
+      gain.connect(audioCtx.destination);
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.3, now + 0.1);
+      
+      // Happy birthday melody notes & duration (Speed adjusted)
+      const notes = [
+        {f: 261.63, d: 0.4}, {f: 261.63, d: 0.4}, {f: 293.66, d: 0.8}, {f: 261.63, d: 0.8}, {f: 349.23, d: 0.8}, {f: 329.63, d: 1.6},
+        {f: 261.63, d: 0.4}, {f: 261.63, d: 0.4}, {f: 293.66, d: 0.8}, {f: 261.63, d: 0.8}, {f: 392.00, d: 0.8}, {f: 349.23, d: 1.6},
+        {f: 261.63, d: 0.4}, {f: 261.63, d: 0.4}, {f: 523.25, d: 0.8}, {f: 440.00, d: 0.8}, {f: 349.23, d: 0.8}, {f: 329.63, d: 0.8}, {f: 293.66, d: 1.2},
+        {f: 466.16, d: 0.4}, {f: 466.16, d: 0.4}, {f: 440.00, d: 0.8}, {f: 349.23, d: 0.8}, {f: 392.00, d: 0.8}, {f: 349.23, d: 1.6}
+      ];
+      
+      let tOffset = 0;
+      const speed = 0.85; // Slightly slower, majestic pace
+      
+      notes.forEach((note) => {
+        const osc = audioCtx.createOscillator();
+        const noteGain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = note.f;
+        
+        osc.connect(noteGain);
+        noteGain.connect(gain);
+        
+        const startTime = now + tOffset;
+        const duration = note.d * speed;
+        
+        noteGain.gain.setValueAtTime(0, startTime);
+        noteGain.gain.linearRampToValueAtTime(1, startTime + 0.05);
+        noteGain.gain.setValueAtTime(1, startTime + duration - 0.05);
+        noteGain.gain.linearRampToValueAtTime(0, startTime + duration);
+        
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+        
+        tOffset += duration;
+      });
+      
+      // Stop master gain when done
+      gain.gain.linearRampToValueAtTime(0, now + tOffset + 0.5);
+      
+      return tOffset; // Return total song duration
+    }
+
+    function fireConfetti() {
+      var duration = 4500;
+      var end = Date.now() + duration;
+
+      (function frame() {
+        // Heavy left and right cannons
+        confetti({
+          particleCount: 15,
+          angle: 60,
+          spread: 90,
+          origin: { x: 0, y: 0.7 },
+          colors: ['#ff7675','#ffeaa7','#55efc4','#74b9ff']
+        });
+        confetti({
+          particleCount: 15,
+          angle: 120,
+          spread: 90,
+          origin: { x: 1, y: 0.7 },
+          colors: ['#ff7675','#ffeaa7','#55efc4','#74b9ff']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    }
+
+    cake.addEventListener('click', async () => {
+      if(isLit) return;
+      isLit = true;
+      
+      // Ignite CSS Flame & Glow
+      cake.classList.add('lit');
+      document.querySelector('.scene').classList.add('lit');
+      
+      try {
+        if(typeof fireConfetti === 'function' && typeof confetti !== 'undefined') {
+          fireConfetti();
+        }
+      } catch (e) {
+        console.log("Confetti bypassed:", e);
+      }
+      
+      try {
+        playBirthdaySong();
+      } catch (e) {
+        console.log("Audio bypassed:", e);
+      }
+      
+      // Show elegant card after 3.8 seconds allowing them to enjoy the cake and music
+      setTimeout(() => {
+        cardOverlay.classList.add('show');
+      }, 3800);
+    });
+
+    closeBtn.addEventListener('click', () => {
+      cardOverlay.classList.remove('show');
+    });
+
+  </script>
+</body>
 </html>
