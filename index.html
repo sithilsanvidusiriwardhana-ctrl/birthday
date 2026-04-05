@@ -624,7 +624,19 @@
     }
 
     cake.addEventListener('click', async () => {
-      if (isLit) return;
+      // If it's lit, blow out the candle immediately when clicked
+      if (isLit) {
+        isLit = false;
+        cake.classList.remove('lit');
+        document.querySelector('.scene').classList.remove('lit');
+        
+        // Stop the birthday song if still playing
+        if (audioCtx && audioCtx.state === 'running') {
+            audioCtx.suspend();
+        }
+        return;
+      }
+
       isLit = true;
 
       // Ignite CSS Flame & Glow
