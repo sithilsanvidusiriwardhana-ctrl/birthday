@@ -52,101 +52,106 @@
       padding-bottom: 50px;
     }
 
-    /* The Cake */
+    /* Royal Teal & Gold Isometric Cake */
     .cake {
       position: relative;
-      width: 260px;
-      height: 160px;
+      width: 240px;
+      height: 200px;
       cursor: pointer;
       z-index: 10;
-      transition: transform 0.3s ease, filter 0.3s ease;
-      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.6));
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.8));
     }
 
     .cake:active {
-      transform: scale(0.97);
+      transform: scale(0.95) translateY(10px);
     }
 
-    /* Layers */
-    .layer-bottom,
-    .layer-top {
+    .tier {
       position: absolute;
-      width: 100%;
-      border-radius: 12px;
-      background: linear-gradient(to right, #cf9286 0%, #efcbc2 50%, #d89b8e 100%);
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
     }
-
-    .layer-bottom {
-      height: 80px;
-      bottom: 0;
-      box-shadow: inset 0 -15px 25px rgba(0, 0, 0, 0.3);
-    }
-
-    .layer-top {
-      height: 80px;
-      bottom: 80px;
-      box-shadow: inset 0 -15px 25px rgba(0, 0, 0, 0.25);
-    }
-
-    /* Icing Drips */
-    .icing {
+    
+    /* Gold Bead Piping */
+    .tier::before {
+      content: '';
       position: absolute;
-      width: 100%;
-      height: 25px;
-      top: -10px;
-      background: var(--icing);
-      border-radius: 20px;
-      box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.8), 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 102%;
+      height: 100%;
+      left: -1%;
+      border-radius: 50%;
+      border-bottom: 8px dotted #cca044;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+      box-sizing: border-box;
+      pointer-events: none;
     }
 
-    .drip {
+    /* Tier 1 (Base) - Dark Teal */
+    .tier-1 {
+      width: 240px;
+      height: 90px;
+      bottom: 20px;
+      background: radial-gradient(ellipse at top left, #29585f, #152d31);
+      box-shadow: 0 45px 0 0 #0e1e21, 0 45px 25px 0 rgba(0,0,0,0.8);
+      z-index: 1;
+    }
+    .tier-1::before { top: 45px; }
+
+    /* Tier 2 - Rich Teal */
+    .tier-2 {
+      width: 190px;
+      height: 70px;
+      bottom: 75px;
+      background: radial-gradient(ellipse at top left, #326b73, #1c3d42);
+      box-shadow: 0 40px 0 0 #132a2d;
+      z-index: 2;
+    }
+    .tier-2::before { top: 40px; border-bottom: 8px dotted #e3b95d; } /* Lighter gold */
+
+    /* Tier 3 (Top) - Gold Foil */
+    .tier-3 {
+      width: 130px;
+      height: 50px;
+      bottom: 125px;
+      background: linear-gradient(135deg, #f8df93, #cca044);
+      box-shadow: 0 35px 0 0 #9e7b30;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .tier-3::before { top: 35px; border-bottom: 8px dotted #fdfaf6; }
+
+    /* Custom Decor on Tier 3 */
+    .tier-3::after {
+      content: '';
       position: absolute;
-      width: 34px;
-      background: var(--icing);
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-    }
-
-    .drip:nth-child(1) {
-      height: 45px;
-      left: 15px;
-    }
-
-    .drip:nth-child(2) {
-      height: 60px;
-      left: 60px;
-    }
-
-    .drip:nth-child(3) {
-      height: 35px;
-      left: 110px;
-    }
-
-    .drip:nth-child(4) {
-      height: 75px;
-      left: 150px;
-    }
-
-    .drip:nth-child(5) {
-      height: 40px;
-      left: 205px;
+      width: 90%;
+      height: 90%;
+      top: 5%; left: 5%;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.5);
+      box-sizing: border-box;
     }
 
     /* Candle */
     .candle {
       position: absolute;
-      width: 18px;
-      height: 70px;
+      width: 14px;
+      height: 55px;
       background: repeating-linear-gradient(-45deg,
-          #fff,
-          #fff 10px,
-          #ff6b6b 10px,
-          #ff6b6b 20px);
-      bottom: 160px;
+          #152d31,
+          #1c3d42 8px,
+          #cca044 8px,
+          #f8df93 16px);
+      bottom: 150px;
       left: 50%;
       transform: translateX(-50%);
-      border-radius: 4px;
-      box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.2), 2px 5px 8px rgba(0, 0, 0, 0.4);
+      border-radius: 8px 8px 3px 3px;
+      box-shadow: inset -3px 0 5px rgba(0, 0, 0, 0.5), 4px 6px 6px rgba(0, 0, 0, 0.4);
+      z-index: 15;
     }
 
     /* Wick */
@@ -155,7 +160,7 @@
       position: absolute;
       width: 4px;
       height: 14px;
-      background: #222;
+      background: #000;
       top: -12px;
       left: 50%;
       transform: translateX(-50%);
@@ -165,7 +170,7 @@
     /* Flame */
     .flame {
       position: absolute;
-      bottom: 240px;
+      bottom: 265px;
       left: 50%;
       transform: translateX(-50%);
       width: 22px;
@@ -198,7 +203,7 @@
 
     .glow {
       position: absolute;
-      bottom: 130px;
+      bottom: 210px;
       left: 50%;
       transform: translateX(-50%);
       width: 350px;
@@ -491,25 +496,9 @@
 
     <div class="cake" id="cake" role="button" tabindex="0">
       <div class="candle"></div>
-
-      <div class="layer-top">
-        <div class="icing">
-          <div class="drip"></div>
-          <div class="drip"></div>
-          <div class="drip"></div>
-          <div class="drip"></div>
-          <div class="drip"></div>
-        </div>
-      </div>
-
-      <div class="layer-bottom">
-        <div class="icing" style="top: -10px;">
-          <div class="drip" style="height: 50px; left: 20px;"></div>
-          <div class="drip" style="height: 35px; left: 85px;"></div>
-          <div class="drip" style="height: 65px; left: 140px;"></div>
-          <div class="drip" style="height: 40px; left: 200px;"></div>
-        </div>
-      </div>
+      <div class="tier tier-1"></div>
+      <div class="tier tier-2"></div>
+      <div class="tier tier-3"></div>
     </div>
 
     <div class="instruction">Tap the cake to light the candle!</div>

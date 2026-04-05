@@ -11,8 +11,34 @@ const closeCardBtn = document.getElementById('closeCard');
 const shareBtn = document.getElementById('shareBtn');
 const audioElem = document.getElementById('bgAudio');
 
+// Debug listeners and test button (helps diagnose why audio may not play)
+if(audioElem){
+  audioElem.addEventListener('canplay', ()=>{ console.info('Audio canplay — source loaded:', audioElem.currentSrc); });
+  audioElem.addEventListener('error', (e)=>{
+    console.error('Audio element error', audioElem.error, e);
+    try{ if(audioElem.error && audioElem.error.code){ console.error('HTMLMediaElement.error.code =', audioElem.error.code); } }catch(_){}
+  });
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const testBtn = document.getElementById('testAudioBtn');
+  if(!testBtn) return;
+  testBtn.addEventListener('click', async ()=>{
+    try{
+      console.info('Test button pressed — attempting audioElem.play()');
+      const p = audioElem.play();
+      if(p && p.catch) p.catch(err=>{ console.error('audioElem.play() rejected:', err); alert('Playback failed — see console for details.'); });
+    }catch(err){
+      console.error('Error calling audioElem.play():', err);
+      alert('Playback error — check console.');
+    }
+  });
+});
+
 let isLit = false;
 let audioCtx, bgGain, bgOscNodes = [];
+let masterGain, mediaSource, mediaGain;
+let padNodes = [];
 let confettiLibLoaded = false;
 
 // load confetti lib dynamically
@@ -62,13 +88,77 @@ function initAudio(){
   if(audioCtx) return;
   try{
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 1.0;
+    masterGain.connect(audioCtx.destination);
+
     bgGain = audioCtx.createGain();
-    bgGain.gain.value = 0.0001; // start near 0 for smooth ramp
-    bgGain.connect(audioCtx.destination);
+    bgGain.gain.value = 0.0001; // start near 0 for smooth ramp for generated music
+    bgGain.connect(masterGain);
+
+    // If there's an <audio> element, route it through the AudioContext so we can mix a background pad
+    if(audioElem){
+      try{
+        mediaSource = audioCtx.createMediaElementSource(audioElem);
+        mediaGain = audioCtx.createGain();
+        mediaGain.gain.value = 1.0; // main song level
+        mediaSource.connect(mediaGain);
+        mediaGain.connect(masterGain);
+      }catch(e){
+        // Some browsers throw if media element was already connected; ignore
+        console.warn('MediaElementSource unavailable:', e);
+      }
+    }
   }catch(e){
     audioCtx = null;
     console.warn('WebAudio not supported', e);
   }
+}
+
+function startBackgroundPad(){
+  if(!audioCtx) return;
+  stopBackgroundPad();
+  const now = audioCtx.currentTime;
+  const padGain = audioCtx.createGain();
+  padGain.gain.value = 0.0;
+  padGain.connect(masterGain || audioCtx.destination);
+  // gentle pad: two detuned sine/saw oscillators through a lowpass
+  const lp = audioCtx.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 800;
+  lp.Q.value = 0.8;
+  lp.connect(padGain);
+
+  const freqs = [130.81, 195.99]; // C3 + G3 (simple interval)
+  freqs.forEach((f,i)=>{
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = (i%2===0)?'sine':'sawtooth';
+    osc.frequency.value = f * (i===1?1.0:1.0);
+    g.gain.value = 0.0;
+    osc.connect(g);
+    g.connect(lp);
+    osc.start(now);
+    padNodes.push({osc,g});
+  });
+
+  // ramp pad up
+  padGain.gain.setValueAtTime(0.0001, now);
+  padGain.gain.exponentialRampToValueAtTime(0.06, now + 1.2);
+  padNodes.padGain = padGain;
+}
+
+function stopBackgroundPad(){
+  try{
+    if(padNodes.padGain){
+      const t = audioCtx.currentTime;
+      padNodes.padGain.gain.cancelScheduledValues(t);
+      padNodes.padGain.gain.setValueAtTime(padNodes.padGain.gain.value, t);
+      padNodes.padGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.8);
+    }
+    padNodes.forEach(n=>{ try{ n.osc.stop?.(audioCtx.currentTime + 0.85); }catch(_){} });
+  }catch(e){}
+  padNodes.length = 0;
 }
 
 function playGeneratedMusic(){
@@ -128,6 +218,10 @@ function playAudioOnInteraction(){
     if(p && p.catch){
       p.catch(()=> { playGeneratedMusic(); });
     }
+    // start background pad when media plays
+    audioElem.addEventListener('play', ()=>{ try{ startBackgroundPad(); }catch(e){} });
+    audioElem.addEventListener('pause', ()=>{ try{ stopBackgroundPad(); }catch(e){} });
+    audioElem.addEventListener('ended', ()=>{ try{ stopBackgroundPad(); }catch(e){} });
     return;
   }
   playGeneratedMusic();
