@@ -40,6 +40,9 @@ let audioCtx, bgGain, bgOscNodes = [];
 let masterGain, mediaSource, mediaGain;
 let padNodes = [];
 let confettiLibLoaded = false;
+let bgAudioElem = null;
+let bgMediaSource = null;
+let bgMediaGain = null;
 
 // load confetti lib dynamically
 function loadConfetti(){
@@ -226,6 +229,80 @@ function playAudioOnInteraction(){
   }
   playGeneratedMusic();
 }
+
+// Background MP3 handling (Option A: mix a second MP3 in-browser)
+function ensureBgAudio(){
+  if(bgAudioElem) return;
+  bgAudioElem = new Audio();
+  bgAudioElem.loop = true;
+  bgAudioElem.preload = 'auto';
+}
+
+function connectBgToAudioCtx(){
+  if(!audioCtx || !bgAudioElem || bgMediaSource) return;
+  try{
+    bgMediaSource = audioCtx.createMediaElementSource(bgAudioElem);
+    bgMediaGain = audioCtx.createGain();
+    bgMediaGain.gain.value = parseFloat(document.getElementById('bgVolume')?.value || 0.35);
+    bgMediaSource.connect(bgMediaGain);
+    bgMediaGain.connect(masterGain || audioCtx.destination);
+  }catch(e){ console.warn('BG media source connect failed', e); }
+}
+
+function setBgVolume(v){ if(bgMediaGain) bgMediaGain.gain.value = v; }
+
+function startBg(){
+  if(!bgAudioElem) return;
+  try{ bgAudioElem.currentTime = 0; const p = bgAudioElem.play(); if(p && p.catch) p.catch(e=>console.error('BG play rejected', e)); }catch(e){ console.error(e); }
+}
+
+function stopBg(){ if(bgAudioElem) try{ bgAudioElem.pause(); bgAudioElem.currentTime = 0; }catch(e){} }
+
+// wire UI for background controls
+document.addEventListener('DOMContentLoaded', ()=>{
+  const fileIn = document.getElementById('bgFileInput');
+  const toggle = document.getElementById('bgToggle');
+  const vol = document.getElementById('bgVolume');
+  if(fileIn){
+    fileIn.addEventListener('change', (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f) return;
+      ensureBgAudio();
+      const url = URL.createObjectURL(f);
+      bgAudioElem.src = url;
+      // init audio context and route
+      initAudio();
+      connectBgToAudioCtx();
+      // if toggle on, start
+      if(toggle && toggle.checked){ startBg(); }
+      console.info('Background file loaded:', f.name);
+    });
+  }
+  // select from mp3/ folder
+  const select = document.getElementById('bgSelect');
+  if(select){
+    select.addEventListener('change', (e)=>{
+      const v = e.target.value;
+      if(!v) return;
+      ensureBgAudio();
+      // use relative URL served by the site
+      bgAudioElem.src = v;
+      initAudio();
+      connectBgToAudioCtx();
+      if(document.getElementById('bgToggle')?.checked){ startBg(); }
+      console.info('Background selected from mp3/:', v);
+    });
+  }
+  if(toggle){
+    toggle.addEventListener('change', ()=>{
+      initAudio();
+      connectBgToAudioCtx();
+      if(toggle.checked){ startBg(); }
+      else { stopBg(); }
+    });
+  }
+  if(vol){ vol.addEventListener('input', (e)=>{ const v=parseFloat(e.target.value); setBgVolume(v); }); }
+});
 
 function showCard(){ 
   card.classList.add('show');
