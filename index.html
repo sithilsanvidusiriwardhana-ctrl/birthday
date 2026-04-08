@@ -542,59 +542,59 @@
     const closeBtn = document.getElementById('closeBtn');
     let isLit = false;
 
-    // WebAudio API for Synthesizer Music
-    let audioCtx;
-    function playBirthdaySong() {
-      if (!audioCtx) {
+    // MP3 Birthday Song Player
+    let audioCtx = null;
+    let songBuffer = null;
+    let songSource = null;
+
+    async function loadSong() {
+      try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const response = await fetch('happy-birthday-lakeesha.mp3');
+        if (!response.ok) throw new Error('MP3 file not found');
+        const arrayBuffer = await response.arrayBuffer();
+        songBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        console.log('🎵 Birthday song loaded successfully!');
+      } catch (e) {
+        console.warn('Could not load MP3, will use fallback:', e.message);
+        // Fallback: try HTML Audio element
+        audioCtx = null;
       }
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-
-      const now = audioCtx.currentTime;
-      const gain = audioCtx.createGain();
-      gain.connect(audioCtx.destination);
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.3, now + 0.1);
-
-      // Happy birthday melody notes & duration (Speed adjusted)
-      const notes = [
-        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 293.66, d: 0.8 }, { f: 261.63, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 329.63, d: 1.6 },
-        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 293.66, d: 0.8 }, { f: 261.63, d: 0.8 }, { f: 392.00, d: 0.8 }, { f: 349.23, d: 1.6 },
-        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 523.25, d: 0.8 }, { f: 440.00, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 329.63, d: 0.8 }, { f: 293.66, d: 1.2 },
-        { f: 466.16, d: 0.4 }, { f: 466.16, d: 0.4 }, { f: 440.00, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 392.00, d: 0.8 }, { f: 349.23, d: 1.6 }
-      ];
-
-      let tOffset = 0;
-      const speed = 0.85; // Slightly slower, majestic pace
-
-      notes.forEach((note) => {
-        const osc = audioCtx.createOscillator();
-        const noteGain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.value = note.f;
-
-        osc.connect(noteGain);
-        noteGain.connect(gain);
-
-        const startTime = now + tOffset;
-        const duration = note.d * speed;
-
-        noteGain.gain.setValueAtTime(0, startTime);
-        noteGain.gain.linearRampToValueAtTime(1, startTime + 0.05);
-        noteGain.gain.setValueAtTime(1, startTime + duration - 0.05);
-        noteGain.gain.linearRampToValueAtTime(0, startTime + duration);
-
-        osc.start(startTime);
-        osc.stop(startTime + duration);
-
-        tOffset += duration;
-      });
-
-      // Stop master gain when done
-      gain.gain.linearRampToValueAtTime(0, now + tOffset + 0.5);
-
-      return tOffset; // Return total song duration
     }
+
+    // HTML Audio element as fallback
+    const birthdayAudio = new Audio('happy-birthday-lakeesha.mp3');
+    birthdayAudio.volume = 0.85;
+
+    function playBirthdaySong() {
+      if (audioCtx && songBuffer) {
+        // AudioContext method (works everywhere)
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        songSource = audioCtx.createBufferSource();
+        songSource.buffer = songBuffer;
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = 0.85;
+        songSource.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        songSource.start(0);
+      } else {
+        // HTML Audio fallback
+        birthdayAudio.currentTime = 0;
+        birthdayAudio.play().catch(e => console.warn('Audio fallback error:', e));
+      }
+    }
+
+    function stopBirthdaySong() {
+      if (songSource) {
+        try { songSource.stop(); } catch(e) {}
+        songSource = null;
+      }
+      birthdayAudio.pause();
+      birthdayAudio.currentTime = 0;
+    }
+
+    // Pre-load the song on page load
+    loadSong();
 
     function fireConfetti() {
       var duration = 4500;
@@ -624,7 +624,17 @@
     }
 
     cake.addEventListener('click', async () => {
-      if (isLit) return;
+      // If it's lit, blow out the candle immediately when clicked
+      if (isLit) {
+        isLit = false;
+        cake.classList.remove('lit');
+        document.querySelector('.scene').classList.remove('lit');
+
+        // Stop the birthday song
+        stopBirthdaySong();
+        return;
+      }
+
       isLit = true;
 
       // Ignite CSS Flame & Glow
